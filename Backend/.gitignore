@@ -1,8 +1,8 @@
 # dependencies
 node_modules/
 
-# production build
-dist/
+# env files
+.env
 
 # logs
 npm-debug.log*

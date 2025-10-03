@@ -1,0 +1,9 @@
+# Ignore node modules everywhere
+**/node_modules
+
+# Ignore envs
+**/.env
+
+# Ignore build artifacts
+Schedulo_Frontend/dist
+Backend/dist
