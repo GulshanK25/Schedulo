@@ -1,0 +1,66 @@
+.landing-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 200vh;
+  background: linear-gradient(120deg, #00c6ff, #0072ff);
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+.landing-container {
+  text-align: center;
+  padding: 60px 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.landing-container h1 {
+  font-size: 38px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.landing-container span {
+  color: #ffeb3b;
+}
+
+.greeting {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.landing-buttons button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #0072ff;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.landing-buttons button:hover {
+  background: #f0f0f0;
+}
+
+.logout-btn {
+  background: #ff3b3b !important;
+  color: white !important;
+}
+
+.logout-btn:hover {
+  background: #e32e2e !important;
+}

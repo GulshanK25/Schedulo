@@ -1,5 +1,5 @@
 
-import Doctor from "../models/doctorMmdel.js";
+import Doctor from "../models/doctormodel.js";
 import User from "../models/usermodel.js";
 
 // Get all users

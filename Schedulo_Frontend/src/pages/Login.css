@@ -1,0 +1,78 @@
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 200vh;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* Form container */
+.login-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  text-align: center;
+}
+
+/* Headings */
+.login-container h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Input fields */
+.login-container input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+/* Placeholder color */
+.login-container input::placeholder {
+  color: #555;
+}
+
+/* Submit button */
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: #0072ff;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-container button:hover {
+  background: #f0f0f0;
+}
+
+/* Optional: small link for forgot password or signup */
+.login-container .small-link {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #f0f0f0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-container .small-link:hover {
+  color: #fff;
+}

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "npm --prefix backend run dev",
-    "client": "npm --prefix frontend run dev"
+    "server": "npm --prefix Backend run dev",
+    "client": "npm --prefix schedulo_Frontend run dev"
   },
   "keywords": [],
   "author": "",

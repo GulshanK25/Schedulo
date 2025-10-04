@@ -6,13 +6,12 @@ import {
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
-  getAllDocotrsController,
-  bookeAppointmnetController,
+  bookAppointmentController,
   bookingAvailabilityController,
   userAppointmentsController,
 } from "../controllers/usercontroller.js";
 
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/authmiddleware.js";
 
 const router = express.Router();
 
@@ -34,10 +33,10 @@ router.post("/get-all-notification", authMiddleware, getAllNotificationControlle
 
 router.post("/delete-all-notification", authMiddleware, deleteAllNotificationController);
 
-router.get("/getAllDoctors", authMiddleware, getAllDocotrsController);
+//router.get("/getAllDoctors", authMiddleware, getAllDocotrsController);
 
 
-router.post("/book-appointment", authMiddleware, bookeAppointmnetController);
+router.post("/book-appointment", authMiddleware, bookAppointmentController);
 
 
 router.post("/booking-availability", authMiddleware, bookingAvailabilityController);

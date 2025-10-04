@@ -4,7 +4,7 @@ import {
   getAllDoctorsController,
   changeAccountStatusController,
 } from "../controllers/admincontroller.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/authmiddleware.js";
 
 const router = express.Router();
 

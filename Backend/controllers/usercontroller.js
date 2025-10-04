@@ -1,9 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import userModel from "../models/usermodels.js";
+import userModel from "../models/usermodel.js";
 import doctorModel from "../models/doctormodel.js";
 import appointmentModel from "../models/appointmentmodel.js";
+
 
 
 export const registerController = async (req, res) => {
@@ -158,7 +159,7 @@ export const bookAppointmentController = async (req, res) => {
     await newAppointment.save();
 
     const doctor = await userModel.findById(req.body.doctorInfo.userId);
-    doctor.notifcation.push({
+    doctor.notifications.push({
       type: "new-appointment-request",
       message: `New appointment request from ${req.body.userInfo.name}`,
       onClickPath: "/user/appointments",
@@ -205,7 +206,7 @@ export const bookingAvailabilityController = async (req, res) => {
   }
 };
 
-// ✅ Get user's appointments
+
 export const userAppointmentsController = async (req, res) => {
   try {
     const appointments = await appointmentModel.find({ userId: req.body.userId });

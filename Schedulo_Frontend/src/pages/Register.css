@@ -1,0 +1,67 @@
+.register-page {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 200vh;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.register-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 380px;
+  text-align: center;
+}
+
+.register-container h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.register-container input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: #0072ff;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-container button:hover {
+  background: #f0f0f0;
+}
+
+.register-container .small-link {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #f0f0f0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.register-container .small-link:hover {
+  color: #fff;
+}
