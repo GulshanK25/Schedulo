@@ -1,4 +1,5 @@
-import { useState, useContext, useEffect } from "react";
+//import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchAPI } from "../api/fetchAPI";
 import { AuthContext } from "../context/AuthContext";
@@ -6,7 +7,7 @@ import "./booking.css";
 
 export default function BookAppointment() {
   const { doctorId } = useParams();
-  const { user } = useContext(AuthContext);
+  //const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [doctor, setDoctor] = useState(null);
@@ -24,7 +25,7 @@ export default function BookAppointment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
+    /*try {
       const res = await fetchAPI("/user/book-appointment", "POST", {
         userId: user._id,
         doctorId,
@@ -41,7 +42,8 @@ export default function BookAppointment() {
       }
     } catch (err) {
       console.error(err);
-    }
+    }*/
+    navigate("/bookingconfirmation");
   };
 
   if (!doctor) return <p>Loading...</p>;

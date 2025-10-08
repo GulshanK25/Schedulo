@@ -1,0 +1,81 @@
+/* General container */
+.add-doctor-container {
+  min-width: 189vh;
+  margin: auto auto;
+  padding: 2rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.add-doctor-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2575fc;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Form styling */
+.add-doctor-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.add-doctor-container input {
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.add-doctor-container input:focus {
+  outline: none;
+  border-color: #2575fc;
+  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+}
+
+/* Submit button */
+.add-doctor-container button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+}
+
+.add-doctor-container button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(37, 117, 252, 0.5);
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .add-doctor-container {
+    padding: 1.5rem 1.5rem;
+  }
+
+  .add-doctor-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .add-doctor-container input {
+    font-size: 0.95rem;
+  }
+
+  .add-doctor-container button {
+    font-size: 0.95rem;
+    padding: 0.65rem 1.2rem;
+  }
+}

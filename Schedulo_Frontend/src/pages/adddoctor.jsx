@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { fetchAPI } from "../api/fetchAPI";
+import "./adddoctor.css";
 
 export default function AddDoctor() {
   const [doctor, setDoctor] = useState({
@@ -38,7 +39,7 @@ export default function AddDoctor() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className = "add-doctor-container" style={{ padding: "20px" }}>
       <h2>Add Doctor</h2>
       <form onSubmit={handleSubmit}>
         <input placeholder="First Name" name="firstName" onChange={handleChange} required />

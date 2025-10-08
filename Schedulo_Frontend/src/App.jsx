@@ -8,6 +8,7 @@ import DoctorsPage from "./pages/viewdoctor";
 import BookAppointment from "./pages/Booking";
 import AppointmentsPage from "./pages/myappointment";
 import AddDoctor from "./pages/adddoctor";
+import BookingConfirmation from "./pages/bookingconfirmation";
 import "./index.css";
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
           <Route path="/book-appointment/:doctorId" element={<BookAppointment />} />
           <Route path="/appointments" element={<AppointmentsPage />} />
           <Route path="/adddoctor" element={<AddDoctor />} />
-
+          <Route path="/bookingconfirmation" element={<BookingConfirmation />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
