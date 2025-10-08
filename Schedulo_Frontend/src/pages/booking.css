@@ -1,0 +1,103 @@
+
+.booking-container {
+  min-width: 187vh;
+  min-height: 150vh;
+  margin: auto auto;
+  padding: 2rem 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.booking-container h1 {
+  font-size: 1.8rem;
+  text-align: center;
+  color: #222;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+
+.booking-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.booking-container label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+
+.booking-container input[type="date"],
+.booking-container input[type="time"] {
+  margin-top: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.booking-container input[type="date"]:focus,
+.booking-container input[type="time"]:focus {
+  outline: none;
+  border-color: #2575fc;
+}
+
+.booking-container button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+}
+
+.booking-container button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(37, 117, 252, 0.5);
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+}
+
+
+.booking-container p {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+@media (max-width: 500px) {
+  .booking-container {
+    padding: 1.5rem 1.5rem;
+  }
+
+  .booking-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .booking-container input[type="date"],
+  .booking-container input[type="time"] {
+    font-size: 0.95rem;
+  }
+
+  .booking-container button {
+    font-size: 0.95rem;
+    padding: 0.65rem 1.2rem;
+  }
+}

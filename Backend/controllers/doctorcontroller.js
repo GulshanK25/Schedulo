@@ -20,6 +20,80 @@ export const getDoctorInfoController = async (req, res) => {
     });
   }
 };
+export const getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await doctorModel.find();
+    res.status(200).send({
+      success: true,
+      message: "All doctors fetched successfully",
+      data: doctors,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching doctors",
+      error,
+    });
+  }
+};
+
+
+export const addDoctorController = async (req, res) => {
+  try {
+    const {
+      userId,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      website,
+      address,
+      specialization,
+      experience,
+      feesPerConsultation,
+      timings,
+    } = req.body;
+
+    // Basic validation
+    if (!firstName || !lastName || !email || !specialization) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
+
+    const newDoctor = new doctorModel({
+      userId: userId || "temporary-user-id", // for now, use dummy userId
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      website,
+      address,
+      specialization,
+      experience,
+      feesPerConsultation,
+      timings,
+      status: "approved",
+    });
+
+    await newDoctor.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Doctor added successfully!",
+      data: newDoctor,
+    });
+  } catch (error) {
+    console.error("Error adding doctor:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding doctor",
+      error,
+    });
+  }
+};
 
 
 export const updateProfileController = async (req, res) => {

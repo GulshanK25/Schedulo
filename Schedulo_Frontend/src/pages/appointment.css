@@ -1,0 +1,56 @@
+.appointments-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.appointment-card {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.appointment-card:hover {
+  transform: translateY(-3px);
+}
+
+.appointment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-info p {
+  margin: 3px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.appointment-actions button {
+  padding: 8px 14px;
+  margin-left: 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.appointment-actions .approve-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.appointment-actions .reject-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.appointment-actions button:hover {
+  opacity: 0.9;
+}

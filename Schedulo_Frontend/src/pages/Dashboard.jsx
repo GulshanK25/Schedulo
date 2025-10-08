@@ -16,7 +16,7 @@ export default function LandingPage() {
         </p>
 
         <div className="landing-buttons">
-          <button onClick={() => navigate("/book")}>Book Appointment</button>
+          <button onClick={() => navigate("/appointments")}>Book Appointment</button>
           <button onClick={() => navigate("/doctors")}>View Doctors</button>
           {user && <button className="logout-btn" onClick={logout}>Logout</button>}
         </div>
