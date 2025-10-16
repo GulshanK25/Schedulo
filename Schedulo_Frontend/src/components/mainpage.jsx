@@ -9,7 +9,6 @@ export default function MainPage() {
 
   return (
     <div className="mainpage">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo" onClick={() => navigate("/")}>
           Schedulo
@@ -34,10 +33,7 @@ export default function MainPage() {
           )}
         </div>
       </nav>
-
-      {/* Hero Section */}
       <section className="hero">
-        <p className="tagline">Healthcare Made Simple</p>
         <h1>Book Your Doctor Appointment Today</h1>
         <p className="subtext">
           Connect with qualified healthcare professionals instantly. Easy booking, trusted doctors, better health outcomes.

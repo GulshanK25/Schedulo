@@ -4,7 +4,7 @@ const appointmentSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-       ref: "users",
+      ref: "users",
       required: true,
     },
     doctorId: {
@@ -22,16 +22,27 @@ const appointmentSchema = new mongoose.Schema(
     },
     date: {
       type: String,
-      required: true,
+      required: true, 
+    },
+    time: {
+      type: String,
+      required: true, 
+    },
+    slotTime: {
+      type: String,
     },
     status: {
       type: String,
       required: true,
-      default: "pending",
+      default: "pending", 
     },
-    time: {
-      type: String,
-      required: true,
+    notes: {
+      type: String, 
+      default: "",
+    },
+    report: {
+      type: String, 
+      default: "",
     },
   },
   { timestamps: true }
@@ -40,4 +51,3 @@ const appointmentSchema = new mongoose.Schema(
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 
 export default Appointment;
-
