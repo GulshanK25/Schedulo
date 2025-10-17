@@ -5,7 +5,7 @@ export default function AdminDoctors() {
   const [doctors, setDoctors] = useState([]);
 
   const fetchDoctors = async () => {
-    const res = await fetchAPI("/admin/getAllDoctors", "GET", null, localStorage.getItem("token"));
+    const res = await fetchAPI("/admin/doctors", "GET", null, localStorage.getItem("token"));
     if (res.success) setDoctors(res.data);
   };
 

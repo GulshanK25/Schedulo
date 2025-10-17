@@ -24,7 +24,7 @@ export const updateProfileController = async (req, res) => {
   }
 };
 
-// Get doctor appointments
+
 export const doctorAppointmentsController = async (req, res) => {
   try {
     const doctor = await doctorModel.findOne({ userId: req.body.userId });
@@ -35,7 +35,6 @@ export const doctorAppointmentsController = async (req, res) => {
   }
 };
 
-// Update appointment status
 export const updateStatusController = async (req, res) => {
   try {
     const { appointmentId, status } = req.body;
@@ -53,7 +52,6 @@ export const updateStatusController = async (req, res) => {
     });
     await patient.save();
 
-    // Optional email notification
     await sendEmail({
       to: patient.email,
       subject: "Appointment Status Updated",
@@ -66,7 +64,6 @@ export const updateStatusController = async (req, res) => {
   }
 };
 
-// Add notes to appointment
 export const addNotesController = async (req, res) => {
   try {
     const { appointmentId, notes } = req.body;

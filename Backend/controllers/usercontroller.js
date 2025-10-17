@@ -169,7 +169,6 @@ export const bookAppointmentController = async (req, res) => {
 };
 
 
-// Check booking availability
 export const bookingAvailabilityController = async (req, res) => {
   try {
     const { doctorId, date, slotTime } = req.body;
@@ -191,10 +190,12 @@ export const bookingAvailabilityController = async (req, res) => {
   }
 };
 
-// Get user appointments
+
 export const userAppointmentsController = async (req, res) => {
   try {
     const appointments = await appointmentModel.find({ userId: req.body.userId });
+    const userId = req.userId;
+    if (!userId) return res.status(401).send({ success: false, message: "Unauthorized" });
     res.status(200).send({ success: true, message: "User appointments fetched", data: appointments });
   } catch (error) {
     res.status(500).send({ success: false, message: "Error fetching appointments", error });

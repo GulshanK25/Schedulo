@@ -6,7 +6,7 @@ export default function AdminUsers() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetchAPI("/admin/getAllUsers", "GET", null, localStorage.getItem("token"));
+      const res = await fetchAPI("/admin/users", "GET", null, localStorage.getItem("token"));
       if (res.success) setUsers(res.data);
     };
     fetchUsers();
