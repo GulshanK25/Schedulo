@@ -2,23 +2,22 @@ import express from "express";
 import {
   getDoctorInfoController,
   updateProfileController,
-  getDoctorByIdController,
   doctorAppointmentsController,
   updateStatusController,
-  getAllDoctors,
-  addNotesController,
+  addNotesController
 } from "../controllers/doctorcontroller.js";
-import authMiddleware from "../middleware/authmiddleware.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/getDoctorInfo", authMiddleware, getDoctorInfoController);
-router.get("/getAllDoctors", getAllDoctors);
-//router.post("/add", addDoctorController);
-router.post("/updateProfile", authMiddleware, updateProfileController);
-router.post("/getDoctorById", authMiddleware, getDoctorByIdController);
-router.get("/doctor-appointments", authMiddleware, doctorAppointmentsController);
-router.post("/update-status", authMiddleware, updateStatusController);
-router.put("/add-notes", authMiddleware, addNotesController);
-router.post("/appointments", authMiddleware, doctorAppointmentsController);
+// Doctor profile
+router.get("/profile", authMiddleware, getDoctorInfoController);
+router.put("/profile", authMiddleware, updateProfileController);
+//router.get("/:doctorId", authMiddleware, getDoctorByIdController);
+
+// Doctor appointments
+router.get("/appointments", authMiddleware, doctorAppointmentsController);
+router.put("/appointments/status", authMiddleware, updateStatusController);
+router.put("/appointments/notes", authMiddleware, addNotesController);
+
 export default router;

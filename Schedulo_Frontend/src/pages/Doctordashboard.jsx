@@ -1,78 +1,131 @@
 import { useEffect, useState } from "react";
 import { fetchAPI } from "../api/fetchAPI";
-import "./DoctorDashboard.css";
+import "./doctorDashboard.css";
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
-  const [notes, setNotes] = useState({}); // store notes per appointment
+  const [selected, setSelected] = useState(null);
+  const [note, setNote] = useState("");
 
-  // Fetch doctor's appointments
+  const doctorId = localStorage.getItem("doctorId"); 
+
+  
   const fetchAppointments = async () => {
-    const token = localStorage.getItem("token");
-    const res = await fetchAPI("/doctor/appointments", "POST", { userId: localStorage.getItem("userId") }, token);
+    const res = await fetchAPI(
+      "/doctor/getDoctorAppointments",
+      "POST",
+      { doctorId },
+      localStorage.getItem("token")
+    );
     if (res.success) setAppointments(res.data);
-    else alert(res.message);
+  };
+
+  const updateStatus = async (appointmentId, status) => {
+    const res = await fetchAPI(
+      "/doctor/updateAppointmentStatus",
+      "POST",
+      { appointmentId, status },
+      localStorage.getItem("token")
+    );
+    if (res.success) {
+      alert("Appointment updated!");
+      fetchAppointments();
+    } else alert(res.message);
+  };
+
+  const submitNote = async () => {
+    const res = await fetchAPI(
+      "/doctor/addAppointmentNote",
+      "POST",
+      { appointmentId: selected._id, note },
+      localStorage.getItem("token")
+    );
+    if (res.success) {
+      alert("Note added successfully!");
+      setNote("");
+      setSelected(null);
+      fetchAppointments();
+    } else alert(res.message);
   };
 
   useEffect(() => {
     fetchAppointments();
   }, []);
 
-  // Confirm or reject appointment
-  const handleStatusUpdate = async (apptId, status) => {
-    const token = localStorage.getItem("token");
-    const res = await fetchAPI("/doctor/updateStatus", "POST", { appointmentsId: apptId, status }, token);
-    if (res.success) {
-      alert(`Appointment ${status}`);
-      fetchAppointments();
-    } else alert(res.message);
-  };
-
-  // Add notes
-  const handleAddNotes = async (apptId) => {
-    const token = localStorage.getItem("token");
-    const note = notes[apptId];
-    if (!note) return alert("Please enter notes first");
-    const res = await fetchAPI("/doctor/addNotes", "POST", { appointmentId: apptId, notes: note }, token);
-    if (res.success) {
-      alert("Notes added successfully");
-      setNotes((prev) => ({ ...prev, [apptId]: "" }));
-    } else alert(res.message);
-  };
-
   return (
     <div className="doctor-dashboard">
       <h1>Doctor Dashboard</h1>
-      {appointments.length === 0 ? (
-        <p>No appointments yet.</p>
-      ) : (
-        <div className="appointments-list">
-          {appointments.map((appt) => (
-            <div className="appointment-card" key={appt._id}>
-              <p><strong>Patient:</strong> {appt.userInfo}</p>
-              <p><strong>Date:</strong> {appt.date}</p>
-              <p><strong>Time:</strong> {appt.time}</p>
-              <p><strong>Status:</strong> {appt.status}</p>
 
-              {appt.status === "pending" && (
-                <div className="actions">
-                  <button onClick={() => handleStatusUpdate(appt._id, "confirmed")}>Confirm</button>
-                  <button onClick={() => handleStatusUpdate(appt._id, "rejected")}>Reject</button>
-                </div>
-              )}
+      <div className="appointments-section">
+        {appointments.length === 0 ? (
+          <p>No appointments yet.</p>
+        ) : (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appt) => (
+                <tr key={appt._id}>
+                  <td>{appt.userInfo}</td>
+                  <td>{appt.date}</td>
+                  <td>{appt.time}</td>
+                  <td>{appt.status}</td>
+                  <td>
+                    {appt.status === "pending" && (
+                      <>
+                        <button
+                          onClick={() => updateStatus(appt._id, "confirmed")}
+                          className="approve-btn"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => updateStatus(appt._id, "rejected")}
+                          className="reject-btn"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    {appt.status === "confirmed" && (
+                      <button
+                        onClick={() => setSelected(appt)}
+                        className="note-btn"
+                      >
+                        Add Note
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
-              <div className="notes-section">
-                <textarea
-                  placeholder="Add notes here..."
-                  value={notes[appt._id] || ""}
-                  onChange={(e) =>
-                    setNotes((prev) => ({ ...prev, [appt._id]: e.target.value }))
-                  }
-                />
-                <button onClick={() => handleAddNotes(appt._id)}>Save Notes</button>
-              </div>
+      {selected && (
+        <div className="note-popup">
+          <div className="note-content">
+            <h3>Add Note for {selected.userInfo}</h3>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Write your notes here..."
+            ></textarea>
+            <div className="popup-actions">
+              <button onClick={submitNote}>Submit</button>
+              <button onClick={() => setSelected(null)} className="cancel-btn">
+                Cancel
+              </button>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

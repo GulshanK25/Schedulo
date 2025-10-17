@@ -3,7 +3,7 @@ import moment from "moment";
 import appointmentModel from "../models/appointmentmodel.js";
 import doctorModel from "../models/doctormodel.js";
 import userModel from "../models/usermodel.js";
-import { sendEmail } from "./_emailHelper.js";
+import { sendEmail } from "./emailhelper.js";
 import mongoose from "mongoose";
 
 // POST /api/book-appointment
@@ -81,7 +81,7 @@ export const bookAppointmentController = async (req, res) => {
 
 export const bookingAvailabilityController = async (req, res) => {
   try {
-    const { doctorId, date, slotTime } = req.body; // date: DD-MM-YYYY, slotTime optional
+    const { doctorId, date, slotTime } = req.body; 
     if (!doctorId || !date) {
       return res.status(400).send({ success: false, message: "Missing doctorId or date" });
     }

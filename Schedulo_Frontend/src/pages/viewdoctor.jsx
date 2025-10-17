@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAPI } from "../api/fetchAPI";
-import "./Doctors.css";
+import "./Doctor.css";
 
 export default function ViewDoctors() {
   const [doctors, setDoctors] = useState([]);

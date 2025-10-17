@@ -1,4 +1,3 @@
-
 import nodemailer from "nodemailer";
 
 export async function sendEmail({ to, subject, text, html = null }) {
@@ -12,12 +11,11 @@ export async function sendEmail({ to, subject, text, html = null }) {
     },
   });
 
-  const info = await transporter.sendMail({
+  return transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to,
     subject,
     text,
     html,
   });
-  return info;
 }

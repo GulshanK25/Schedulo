@@ -15,16 +15,27 @@ export default function Login() {
     try {
       const res = await fetchAPI("/user/login", "POST", { email, password });
       if (res.success) {
-        localStorage.setItem("token", res.token);
-        const userData = await fetchAPI("/user/getUserData", "POST", {}, res.token);
-        setUser(userData.data);
-        navigate("/user-dashboard");
-      } else {
-        alert(res.message);
-      }
+        const token = res.token;
+        localStorage.setItem("token", token);
+        const userRes = await fetchAPI("/user/getUserData", "POST", {}, token);
+       if (userRes.success) {
+  const userData = userRes.data;
+  let role = "user";
+  if (userData.isAdmin) role = "admin";
+  else if (userData.isDoctor) role = "doctor";
+  setUser(userData);
+  localStorage.setItem("role", role);
+  localStorage.setItem("userId", userData._id);
+  if (role === "doctor") localStorage.setItem("doctorId", userData._id);
+  if (role === "admin") navigate("/admin/dashboard");
+  else if (role === "doctor") navigate("/doctor/dashboard");
+  else navigate("/user/dashboard");
+} else {
+  alert(userRes.message);
+}}
     } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
+      console.error("Login error:", err);
+      alert("Something went wrong. Please try again.");
     }
   };
 

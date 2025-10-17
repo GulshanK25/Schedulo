@@ -3,11 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
-
-
 import doctorRoutes from "./routes/doctorroutes.js";
 import adminRoutes from "./routes/adminroutes.js";
 import userRoutes from "./routes/userroutes.js"; 
+import appointmentRoutes from "./routes/appoinmtentroutes.js";
 
 
 dotenv.config();
@@ -25,6 +24,7 @@ app.use(morgan("dev"));
 app.use("/api/v1/doctor", doctorRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/appointment", appointmentRoutes);
 
 
 app.get("/", (req, res) => {
