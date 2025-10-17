@@ -116,11 +116,11 @@ export default function UserDashboard() {
                       {doc.timings?.morning?.from} - {doc.timings?.evening?.to}
                     </p>
                     <button
-                      className="book-btn"
-                      onClick={() => navigate("/book-appointment/:doctorId")}
+                    className="book-btn"
+                    onClick={() => navigate(`/book-appointment/${doc._id}`, { state: { doctorId: doc._id } })}
                     >
-                      Book Appointment
-                    </button>
+                    Book Appointment
+                </button>
                   </div>
                 ))
               ) : (

@@ -117,57 +117,46 @@ export const getUserDataController = async (req, res) => {
 
 export const bookAppointmentController = async (req, res) => {
   try {
-    const { doctorId, userId, userInfo, date, startTime } = req.body;
+    const { doctorId, userId, userInfo, date, time, doctorInfo } = req.body;
 
-    if (!doctorId || !userId || !date || !startTime)
-      return res.status(400).send({ success: false, message: "Missing required fields" });
+    const doctor = await doctorModel.findById(doctorId);
+    if (!doctor) return res.status(404).send({ success: false, message: "Doctor not found" });
 
-    // Find doctor and check if the slot is available
-    const doctor = await Doctor.findOne({
-      _id: doctorId,
-      slots: { $elemMatch: { date, startTime, booked: false } },
-    });
+    
+    const slot = doctor.slots.find(s => s.date === date && s.startTime === time);
+    if (!slot || slot.booked) {
+      return res.status(400).send({ success: false, message: "Slot not available" });
+    }
 
-    if (!doctor)
-      return res.status(200).send({ success: false, message: "Slot not available" });
-
-    // Create appointment
-    const newAppointment = await Appointment.create({
+    
+    const appointment = new appointmentModel({
       doctorId,
       userId,
+      doctorInfo,
       userInfo,
-      doctorInfo: `${doctor.firstName} ${doctor.lastName}`,
       date,
-      slotTime: startTime,
+      slotTime: time,
       status: "pending",
     });
+    await appointment.save();
 
-    // Mark the slot as booked and link the appointment
-    await Doctor.updateOne(
-      { _id: doctorId, "slots.date": date, "slots.startTime": startTime },
-      { $set: { "slots.$.booked": true, "slots.$.appointmentId": newAppointment._id } }
-    );
-
-    // Notify doctor
-    const docUser = await User.findById(doctor.userId);
-    docUser.notifications.push({
+    const doctorUser = await userModel.findById(doctor.userId);
+    doctorUser.notifications.push({
       type: "new-appointment-request",
-      message: `New appointment request from ${userInfo.name}`,
+      message: `New appointment request from ${userInfo}`,
       onClickPath: "/doctor/appointments",
-      data: { appointmentId: newAppointment._id },
     });
-    await docUser.save();
+    await doctorUser.save();
 
     res.status(200).send({
       success: true,
-      message: "Appointment booked successfully",
-      data: newAppointment,
+      message: "Appointment booked successfully! Awaiting doctor's confirmation.",
+      data: appointment,
     });
   } catch (error) {
     res.status(500).send({ success: false, message: "Booking error", error });
   }
 };
-
 
 export const bookingAvailabilityController = async (req, res) => {
   try {

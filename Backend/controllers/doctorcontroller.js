@@ -63,6 +63,20 @@ export const updateStatusController = async (req, res) => {
     res.status(500).send({ success: false, message: "Error updating status", error });
   }
 };
+export const getDoctorByIdController = async (req, res) => {
+  try {
+    const doctor = await doctorModel.findById(req.params.id);
+
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: "Doctor not found" });
+    }
+
+    res.status(200).json({ success: true, data: doctor });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 export const addNotesController = async (req, res) => {
   try {
@@ -71,5 +85,27 @@ export const addNotesController = async (req, res) => {
     res.status(200).send({ success: true, message: "Notes added", data: appointment });
   } catch (error) {
     res.status(500).send({ success: false, message: "Error adding notes", error });
+  }
+};
+
+export const getDoctorSlotsController = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+    const { date } = req.query; // get date from query string
+
+    if (!date) return res.status(400).send({ success: false, message: "Date is required" });
+
+    const doctor = await doctorModel.findById(doctorId);
+    if (!doctor) return res.status(404).send({ success: false, message: "Doctor not found" });
+
+    // Filter slots for the given date
+    const slotsForDate = doctor.slots
+      .filter((s) => s.date === date)
+      .map((s) => ({ startTime: s.startTime, endTime: s.endTime, booked: s.booked || false }));
+
+    res.status(200).send({ success: true, slots: slotsForDate });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ success: false, message: "Error fetching slots", error });
   }
 };

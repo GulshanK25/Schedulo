@@ -1,131 +1,97 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchAPI } from "../api/fetchAPI";
 import "./doctorDashboard.css";
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const doctorId = localStorage.getItem("doctorId"); 
-
-  
-  const fetchAppointments = async () => {
-    const res = await fetchAPI(
-      "/doctor/getDoctorAppointments",
-      "POST",
-      { doctorId },
-      localStorage.getItem("token")
-    );
-    if (res.success) setAppointments(res.data);
-  };
-
-  const updateStatus = async (appointmentId, status) => {
-    const res = await fetchAPI(
-      "/doctor/updateAppointmentStatus",
-      "POST",
-      { appointmentId, status },
-      localStorage.getItem("token")
-    );
-    if (res.success) {
-      alert("Appointment updated!");
-      fetchAppointments();
-    } else alert(res.message);
-  };
-
-  const submitNote = async () => {
-    const res = await fetchAPI(
-      "/doctor/addAppointmentNote",
-      "POST",
-      { appointmentId: selected._id, note },
-      localStorage.getItem("token")
-    );
-    if (res.success) {
-      alert("Note added successfully!");
-      setNote("");
-      setSelected(null);
-      fetchAppointments();
-    } else alert(res.message);
-  };
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchAppointments();
   }, []);
 
+  const fetchAppointments = async () => {
+    try {
+      const res = await fetchAPI("/doctor/appointments", "GET", null, token);
+      if (res.success) {
+        setAppointments(res.data);
+      } else {
+        alert(res.message || "Failed to fetch appointments.");
+      }
+    } catch (err) {
+      console.error("Error fetching appointments:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAction = async (appointmentId, action) => {
+    try {
+      const res = await fetchAPI(
+        `/doctor/appointment/${appointmentId}/${action}`,
+        "PUT",
+        null,
+        token
+      );
+      if (res.success) {
+        alert(`Appointment ${action}ed successfully!`);
+        fetchAppointments();
+      } else {
+        alert(res.message || "Action failed.");
+      }
+    } catch (err) {
+      console.error("Error updating appointment:", err);
+    }
+  };
+
+  if (loading) return <p>Loading appointments...</p>;
+
   return (
     <div className="doctor-dashboard">
-      <h1>Doctor Dashboard</h1>
+      <h2>Doctor Dashboard</h2>
 
-      <div className="appointments-section">
-        {appointments.length === 0 ? (
-          <p>No appointments yet.</p>
-        ) : (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Patient</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments.map((appt) => (
-                <tr key={appt._id}>
-                  <td>{appt.userInfo}</td>
-                  <td>{appt.date}</td>
-                  <td>{appt.time}</td>
-                  <td>{appt.status}</td>
-                  <td>
-                    {appt.status === "pending" && (
-                      <>
-                        <button
-                          onClick={() => updateStatus(appt._id, "confirmed")}
-                          className="approve-btn"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          onClick={() => updateStatus(appt._id, "rejected")}
-                          className="reject-btn"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-                    {appt.status === "confirmed" && (
-                      <button
-                        onClick={() => setSelected(appt)}
-                        className="note-btn"
-                      >
-                        Add Note
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      {appointments.length === 0 ? (
+        <p>No appointments yet.</p>
+      ) : (
+        <div className="appointment-list">
+          {appointments.map((appt) => (
+            <div key={appt._id} className="appointment-card">
+              <p>
+                <strong>Patient:</strong> {appt.userInfo}
+              </p>
+              <p>
+                <strong>Date:</strong> {appt.date}
+              </p>
+              <p>
+                <strong>Time:</strong> {appt.time}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className={`status ${appt.status.toLowerCase()}`}>
+                  {appt.status}
+                </span>
+              </p>
 
-      {selected && (
-        <div className="note-popup">
-          <div className="note-content">
-            <h3>Add Note for {selected.userInfo}</h3>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Write your notes here..."
-            ></textarea>
-            <div className="popup-actions">
-              <button onClick={submitNote}>Submit</button>
-              <button onClick={() => setSelected(null)} className="cancel-btn">
-                Cancel
-              </button>
+              {appt.status === "Pending" && (
+                <div className="actions">
+                  <button
+                    className="accept-btn"
+                    onClick={() => handleAction(appt._id, "accept")}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="reject-btn"
+                    onClick={() => handleAction(appt._id, "reject")}
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
         </div>
       )}
     </div>

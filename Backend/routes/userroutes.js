@@ -11,7 +11,8 @@ import {
   bookingAvailabilityController,
   userAppointmentsController,
   getUserDataController
-} from "../controllers/userController.js";
+} from "../controllers/usercontroller.js";
+import { getDoctorByIdController } from "../controllers/doctorcontroller.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -22,6 +23,7 @@ router.get("/auth", authMiddleware, authController);
 router.get("/doctors", authMiddleware, getAllDoctorsController);
 router.post("/apply-doctor", authMiddleware, applyDoctorController);
 router.post("/getUserData", getUserDataController);
+router.get("/doctor/:id", authMiddleware, getDoctorByIdController);
 router.post("/book-appointment", authMiddleware, bookAppointmentController);
 router.post("/check-availability", authMiddleware, bookingAvailabilityController);
 router.get("/appointments", authMiddleware, userAppointmentsController);
