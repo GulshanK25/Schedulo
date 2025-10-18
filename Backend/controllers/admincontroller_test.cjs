@@ -1,11 +1,10 @@
+// File: Backend/controllers/admincontroller_test.cjs
+const Doctor = require("../models/doctormodel.cjs");
+const User = require("../models/usermodel.cjs");
 
-import Doctor from "../models/doctormodel.js";
-import User from "../models/usermodel.js";
-
-// Get all users
-export const getAllUsersController = async (req, res) => {
+const getAllUsersController = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); 
+    const users = await User.find().select("-password");
     res.status(200).json({
       success: true,
       message: "Users data list",
@@ -21,8 +20,7 @@ export const getAllUsersController = async (req, res) => {
   }
 };
 
-
-export const getAllDoctorsController = async (req, res) => {
+const getAllDoctorsController = async (req, res) => {
   try {
     const doctors = await Doctor.find();
     res.status(200).json({
@@ -40,12 +38,15 @@ export const getAllDoctorsController = async (req, res) => {
   }
 };
 
-
-export const changeAccountStatusController = async (req, res) => {
+const changeAccountStatusController = async (req, res) => {
   try {
     const { doctorId, status } = req.body;
 
-    const doctor = await Doctor.findByIdAndUpdate(doctorId, { status }, { new: true });
+    const doctor = await Doctor.findByIdAndUpdate(
+      doctorId,
+      { status },
+      { new: true }
+    );
     if (!doctor) {
       return res.status(404).json({
         success: false,
@@ -61,14 +62,12 @@ export const changeAccountStatusController = async (req, res) => {
       });
     }
 
-   
     user.notifications.push({
       type: "doctor-account-request-updated",
       message: `Your Doctor Account Request Has Been ${status}`,
       onClickPath: "/notification",
     });
 
-    
     user.isDoctor = status === "approved";
     await user.save();
 
@@ -85,4 +84,10 @@ export const changeAccountStatusController = async (req, res) => {
       error,
     });
   }
+};
+
+module.exports = {
+  getAllUsersController,
+  getAllDoctorsController,
+  changeAccountStatusController,
 };
