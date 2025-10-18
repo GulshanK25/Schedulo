@@ -17,10 +17,11 @@ const slotSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  status: { type: String, default: "available" }, 
   
   appointmentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "appointments",
+    ref: "Appointment",
     default: null,
   },
 });

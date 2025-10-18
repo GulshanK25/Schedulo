@@ -117,28 +117,34 @@ export const getUserDataController = async (req, res) => {
 
 export const bookAppointmentController = async (req, res) => {
   try {
-    const { doctorId, userId, userInfo, date, time, doctorInfo } = req.body;
+    const { doctorId, userId, userInfo, date, startTime, doctorInfo } = req.body;
 
     const doctor = await doctorModel.findById(doctorId);
     if (!doctor) return res.status(404).send({ success: false, message: "Doctor not found" });
 
-    
-    const slot = doctor.slots.find(s => s.date === date && s.startTime === time);
-    if (!slot || slot.booked) {
-      return res.status(400).send({ success: false, message: "Slot not available" });
-    }
+    // Use startTime from request body
+    const slot = doctor.slots.find(s => s.date === date && s.startTime === startTime);
 
-    
+    if (!slot || slot.status !== "available") {
+  return res.status(400).send({ success: false, message: "Slot not available" });
+}
+
+
+slot.status = "pending";
+
     const appointment = new appointmentModel({
       doctorId,
       userId,
       doctorInfo,
       userInfo,
       date,
-      slotTime: time,
+      time: startTime,
+      slotTime: startTime,
       status: "pending",
     });
+
     await appointment.save();
+    await doctor.save(); 
 
     const doctorUser = await userModel.findById(doctor.userId);
     doctorUser.notifications.push({
@@ -153,7 +159,9 @@ export const bookAppointmentController = async (req, res) => {
       message: "Appointment booked successfully! Awaiting doctor's confirmation.",
       data: appointment,
     });
+
   } catch (error) {
+    console.error("Booking error:", error);
     res.status(500).send({ success: false, message: "Booking error", error });
   }
 };
@@ -182,16 +190,49 @@ export const bookingAvailabilityController = async (req, res) => {
 
 export const userAppointmentsController = async (req, res) => {
   try {
-    const appointments = await appointmentModel.find({ userId: req.body.userId });
+    // Ensure auth middleware sets req.userId
     const userId = req.userId;
-    if (!userId) return res.status(401).send({ success: false, message: "Unauthorized" });
-    res.status(200).send({ success: true, message: "User appointments fetched", data: appointments });
+    if (!userId)
+      return res
+        .status(401)
+        .send({ success: false, message: "Unauthorized" });
+
+    // Fetch appointments for this user
+    const appointments = await appointmentModel
+      .find({ userId })
+      .populate({
+        path: "doctorId",
+        select: "firstName lastName specialization",
+      })
+      .sort({ date: -1 }); // latest first
+    const formattedAppointments = appointments.map((apt) => ({
+      _id: apt._id,
+      date: apt.date,
+      time: apt.time || apt.slotTime,
+      status: apt.status,
+      doctorName: apt.doctorId
+        ? `Dr. ${apt.doctorId.firstName} ${apt.doctorId.lastName}`
+        : "Doctor info unavailable",
+      doctorSpecialization: apt.doctorId?.specialization || "",
+    }));
+
+    res.status(200).send({
+      success: true,
+      message: "User appointments fetched successfully",
+      data: formattedAppointments,
+    });
   } catch (error) {
-    res.status(500).send({ success: false, message: "Error fetching appointments", error });
+    console.error("Error fetching appointments:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching appointments",
+      error: error.message,
+    });
   }
 };
 
-// Apply for doctor (optional)
+
+
 export const applyDoctorController = async (req, res) => {
   try {
     const newDoctor = new doctorModel({ ...req.body, status: "pending" });

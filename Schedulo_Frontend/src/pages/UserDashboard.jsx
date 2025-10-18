@@ -8,6 +8,8 @@ export default function UserDashboard() {
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [specialization, setSpecialization] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState("doctors");
 
   const { user } = useContext(AuthContext);
@@ -16,17 +18,16 @@ export default function UserDashboard() {
   useEffect(() => {
     fetchDoctors();
     fetchAppointments();
+    fetchNotifications();
   }, []);
 
   const fetchDoctors = async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetchAPI("/user/doctors", "GET", null, token);
-
       if (res.success && Array.isArray(res.data)) {
         setDoctors(res.data);
       } else {
-        console.warn("No doctors found:", res.message);
         setDoctors([]);
       }
     } catch (err) {
@@ -39,16 +40,29 @@ export default function UserDashboard() {
     try {
       const token = localStorage.getItem("token");
       const res = await fetchAPI("/user/appointments", "GET", null, token);
-
       if (res.success && Array.isArray(res.data)) {
         setAppointments(res.data);
       } else {
-        console.warn("No appointments found:", res.message);
         setAppointments([]);
       }
     } catch (err) {
       console.error("Error fetching appointments:", err);
       setAppointments([]);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetchAPI("/user/notifications", "GET", null, token);
+      if (res.success && Array.isArray(res.data)) {
+        setNotifications(res.data.reverse()); // show newest first
+      } else {
+        setNotifications([]);
+      }
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+      setNotifications([]);
     }
   };
 
@@ -77,11 +91,34 @@ export default function UserDashboard() {
           </li>
         </ul>
       </aside>
+
       <div className="content">
-        <h1>Welcome, {user?.name || "User"} 👋</h1>
-        <p className="subtitle">
-          Manage your doctors and appointments in one place.
-        </p>
+        <div className="header-top">
+          <h1>Welcome, {user?.name || "User"} 👋</h1>
+          <div className="notifications-wrapper">
+            <button
+              className="notification-btn"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              🔔 {notifications.length > 0 && <span className="notif-count">{notifications.length}</span>}
+            </button>
+            {showNotifications && (
+              <div className="notifications-dropdown">
+                {notifications.length > 0 ? (
+                  notifications.map((n, idx) => (
+                    <div key={idx} className="notification-item">
+                      {n.message}
+                    </div>
+                  ))
+                ) : (
+                  <div className="notification-item">No notifications</div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <p className="subtitle">Manage your doctors and appointments in one place.</p>
 
         {activeTab === "doctors" && (
           <section className="doctors-section">
@@ -112,15 +149,14 @@ export default function UserDashboard() {
                       <strong>Fees:</strong> {doc.feesPerConsultation} krones
                     </p>
                     <p>
-                      <strong>Timing:</strong>{" "}
-                      {doc.timings?.morning?.from} - {doc.timings?.evening?.to}
+                      <strong>Timing:</strong> {doc.timings?.morning?.from} - {doc.timings?.evening?.to}
                     </p>
                     <button
-                    className="book-btn"
-                    onClick={() => navigate(`/book-appointment/${doc._id}`, { state: { doctorId: doc._id } })}
+                      className="book-btn"
+                      onClick={() => navigate(`/book-appointment/${doc._id}`, { state: { doctorId: doc._id } })}
                     >
-                    Book Appointment
-                </button>
+                      Book Appointment
+                    </button>
                   </div>
                 ))
               ) : (
@@ -141,8 +177,7 @@ export default function UserDashboard() {
                       <strong>Doctor:</strong> {apt.doctorName}
                     </p>
                     <p>
-                      <strong>Date:</strong>{" "}
-                      {new Date(apt.date).toLocaleDateString()}
+                      <strong>Date:</strong> {apt.date} {/* show as is */}
                     </p>
                     <p>
                       <strong>Status:</strong> {apt.status}

@@ -7,10 +7,22 @@ import { sendEmail } from "./emailhelper.js";
 
 export const getDoctorInfoController = async (req, res) => {
   try {
-    const doctor = await doctorModel.findOne({ userId: req.body.userId });
-    res.status(200).send({ success: true, message: "Doctor profile fetched", data: doctor });
+    const doctor = await doctorModel.findOne({ userId: req.userId });
+    if (!doctor)
+      return res.status(404).send({ success: false, message: "Doctor not found" });
+
+    res.status(200).send({
+      success: true,
+      message: "Doctor profile fetched successfully",
+      data: doctor,
+    });
   } catch (error) {
-    res.status(500).send({ success: false, message: "Error fetching doctor profile", error });
+    console.error("Error fetching doctor info:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching doctor profile",
+      error,
+    });
   }
 };
 
@@ -27,42 +39,70 @@ export const updateProfileController = async (req, res) => {
 
 export const doctorAppointmentsController = async (req, res) => {
   try {
-    const doctor = await doctorModel.findOne({ userId: req.body.userId });
-    const appointments = await appointmentModel.find({ doctorId: doctor._id });
-    res.status(200).send({ success: true, message: "Appointments fetched", data: appointments });
+    
+    const doctor = await doctorModel.findOne({ userId: req.userId });
+    if (!doctor)
+      return res.status(404).send({ success: false, message: "Doctor not found" });
+
+    const appointments = await appointmentModel
+      .find({ doctorId: doctor._id })
+      .populate("userId", "name email phone")
+      .sort({ date: 1 });
+
+    res.status(200).send({
+      success: true,
+      message: "Appointments fetched successfully",
+      data: appointments,
+    });
   } catch (error) {
-    res.status(500).send({ success: false, message: "Error fetching appointments", error });
+    console.error("Error fetching appointments:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error fetching appointments",
+      error,
+    });
   }
 };
 
 export const updateStatusController = async (req, res) => {
   try {
-    const { appointmentId, status } = req.body;
-    const appointment = await appointmentModel.findById(appointmentId);
-    if (!appointment) return res.status(404).send({ success: false, message: "Appointment not found" });
+    const { appointmentId, action } = req.body;
+    if (!appointmentId || !action)
+      return res.status(400).send({ success: false, message: "Missing fields" });
 
-    appointment.status = status;
+    const appointment = await appointmentModel.findById(appointmentId);
+    if (!appointment)
+      return res.status(404).send({ success: false, message: "Appointment not found" });
+
+    appointment.status =
+      action.toLowerCase() === "accept" ? "Accepted" : "Rejected";
     await appointment.save();
 
-    const patient = await userModel.findById(appointment.userId);
-    patient.notifications.push({
-      type: "appointment-status-updated",
-      message: `Your appointment with Dr. ${appointment.doctorInfo} is now ${status}`,
-      onClickPath: "/appointments",
-    });
-    await patient.save();
+    const user = await userModel.findById(appointment.userId);
+    if (user) {
+      user.notifications.push({
+        type: "appointment-status-update",
+        message: `Your appointment on ${appointment.date} was ${appointment.status.toLowerCase()}.`,
+        onClickPath: "/user/appointments",
+      });
+      await user.save();
+    }
 
-    await sendEmail({
-      to: patient.email,
-      subject: "Appointment Status Updated",
-      text: `Your appointment with Dr. ${appointment.doctorInfo} is now ${status}`,
+    res.status(200).send({
+      success: true,
+      message: `Appointment ${appointment.status.toLowerCase()} successfully`,
+      data: appointment,
     });
-
-    res.status(200).send({ success: true, message: "Appointment status updated", data: appointment });
   } catch (error) {
-    res.status(500).send({ success: false, message: "Error updating status", error });
+    console.error("Error updating appointment status:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error updating appointment status",
+      error,
+    });
   }
 };
+
 export const getDoctorByIdController = async (req, res) => {
   try {
     const doctor = await doctorModel.findById(req.params.id);
@@ -91,14 +131,14 @@ export const addNotesController = async (req, res) => {
 export const getDoctorSlotsController = async (req, res) => {
   try {
     const { doctorId } = req.params;
-    const { date } = req.query; // get date from query string
+    const { date } = req.query; 
 
     if (!date) return res.status(400).send({ success: false, message: "Date is required" });
 
     const doctor = await doctorModel.findById(doctorId);
     if (!doctor) return res.status(404).send({ success: false, message: "Doctor not found" });
 
-    // Filter slots for the given date
+    
     const slotsForDate = doctor.slots
       .filter((s) => s.date === date)
       .map((s) => ({ startTime: s.startTime, endTime: s.endTime, booked: s.booked || false }));

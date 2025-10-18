@@ -18,13 +18,6 @@ export default function BookAppointment() {
 
   const token = localStorage.getItem("token");
 
-  // Convert date from yyyy-mm-dd to dd-mm-yyyy for backend
-  const formatDateForBackend = (dateStr) => {
-    if (!dateStr) return "";
-    const [year, month, day] = dateStr.split("-");
-    return `${day}-${month}-${year}`;
-  };
-
   // Fetch doctor details
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -43,17 +36,15 @@ export default function BookAppointment() {
   // Fetch slots whenever date changes
   useEffect(() => {
     if (!date) return;
+
+    // Convert date to dd-mm-yyyy
+    const dateParts = date.split("-");
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
     const fetchSlots = async () => {
       try {
-        const formattedDate = formatDateForBackend(date);
-        const res = await fetchAPI(
-          `/doctor/doctor-slots/${doctorId}?date=${formattedDate}`,
-          "GET",
-          null,
-          token
-        );
+        const res = await fetchAPI(`/doctor/doctor-slots/${doctorId}?date=${formattedDate}`, "GET", null, token);
         if (res.success) setSlots(res.slots || []);
-        else setSlots([]);
       } catch (err) {
         console.error("Error fetching slots:", err);
         setSlots([]);
@@ -64,15 +55,14 @@ export default function BookAppointment() {
     setAvailability(null);
   }, [date, doctorId, token]);
 
-  // Check slot availability
+  // Check availability
   const checkAvailability = async () => {
     if (!time) return alert("Please select a time slot first!");
     try {
-      const formattedDate = formatDateForBackend(date);
       const res = await fetchAPI(
         "/user/check-availability",
         "POST",
-        { doctorId, date: formattedDate, slotTime: time },
+        { doctorId, date, slotTime: time },
         token
       );
       setAvailability(res.success);
@@ -88,8 +78,14 @@ export default function BookAppointment() {
     e.preventDefault();
     if (!time) return alert("Please select a time slot!");
 
+
+    // Format date for backend
+    const dateParts = date.split("-");
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+    console.log("Submitting booking:", { doctorId, userId: user._id, formattedDate, startTime: time });
+
     try {
-      const formattedDate = formatDateForBackend(date);
       const res = await fetchAPI(
         "/user/book-appointment",
         "POST",
@@ -99,14 +95,14 @@ export default function BookAppointment() {
           date: formattedDate,
           startTime: time,
           doctorInfo: `${doctor.firstName} ${doctor.lastName}`,
-          userInfo: { name: user.name, email: user.email },
+         userInfo: `${user.name} (${user.email})`
         },
         token
       );
 
       if (res.success) {
         alert("Appointment booked successfully! Waiting for doctor confirmation.");
-        navigate("/userdashboard");
+        navigate("/user/dashboard");
       } else {
         alert(res.message || "Failed to book appointment");
       }
@@ -122,7 +118,6 @@ export default function BookAppointment() {
   return (
     <div className="booking-container">
       <h1>Book Appointment with Dr. {doctor.firstName} {doctor.lastName}</h1>
-
       <form onSubmit={handleSubmit} className="booking-form">
         <label>
           Select Date:
