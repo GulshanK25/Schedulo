@@ -1,66 +1,375 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
 .landing-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  min-width: 200vh;
-  background: linear-gradient(120deg, #00c6ff, #0072ff);
+  width: 100vw;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
   color: white;
-  font-family: "Poppins", sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animated background particles */
+.landing-page::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 100px 100px, 150px 150px, 120px 120px;
+  animation: moveParticles 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes moveParticles {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* Floating shapes */
+.landing-page::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
+  border-radius: 50%;
+  top: -200px;
+  right: -200px;
+  animation: float 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-50px) rotate(180deg);
+  }
 }
 
 .landing-container {
   text-align: center;
-  padding: 60px 30px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  padding: 70px 50px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.2);
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Logo/Icon above title */
+.landing-container::before {
+  content: '🏥';
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 80px;
+  background: rgba(255, 255, 255, 0.95);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-15px);
+  }
 }
 
 .landing-container h1 {
-  font-size: 38px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  margin-top: 30px;
+  letter-spacing: -1px;
+  animation: fadeInDown 0.8s ease 0.2s backwards;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.landing-container span {
-  color: #ffeb3b;
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-container h1 span {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  position: relative;
+  display: inline-block;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+  }
 }
 
 .greeting {
-  font-size: 18px;
-  margin-bottom: 30px;
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  animation: fadeInUp 0.8s ease 0.4s backwards;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .landing-buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease 0.6s backwards;
 }
 
 .landing-buttons button {
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 16px 36px;
+  font-size: 1.05rem;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
-  color: #0072ff;
-  background: white;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.3px;
+}
+
+.landing-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.landing-buttons button:hover::before {
+  width: 400px;
+  height: 400px;
 }
 
 .landing-buttons button:hover {
-  background: #f0f0f0;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 1);
 }
 
+.landing-buttons button:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Special styling for logout button */
 .logout-btn {
-  background: #ff3b3b !important;
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important;
   color: white !important;
+  box-shadow: 0 6px 20px rgba(255, 65, 108, 0.4) !important;
 }
 
 .logout-btn:hover {
-  background: #e32e2e !important;
+  background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%) !important;
+  box-shadow: 0 12px 35px rgba(255, 65, 108, 0.5) !important;
+}
+
+.logout-btn::before {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Icon decorations on buttons */
+.landing-buttons button:nth-child(1)::after {
+  content: '📅';
+  margin-left: 8px;
+  font-size: 1.1rem;
+}
+
+.landing-buttons button:nth-child(2)::after {
+  content: '👨‍⚕️';
+  margin-left: 8px;
+  font-size: 1.1rem;
+}
+
+.logout-btn::after {
+  content: '🚪';
+  margin-left: 8px;
+  font-size: 1.1rem;
+}
+
+/* Decorative lines */
+.landing-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, 
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  border-radius: 0 0 32px 32px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .landing-container {
+    padding: 60px 35px;
+    border-radius: 28px;
+  }
+
+  .landing-container::before {
+    font-size: 60px;
+    width: 80px;
+    height: 80px;
+    top: -40px;
+  }
+
+  .landing-container h1 {
+    font-size: 2.5rem;
+    margin-top: 20px;
+  }
+
+  .greeting {
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+  }
+
+  .landing-buttons {
+    gap: 12px;
+  }
+
+  .landing-buttons button {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-container {
+    padding: 50px 25px;
+  }
+
+  .landing-container h1 {
+    font-size: 2rem;
+  }
+
+  .greeting {
+    font-size: 1rem;
+  }
+
+  .landing-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .landing-buttons button {
+    width: 100%;
+  }
+}
+
+/* Accessibility - Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

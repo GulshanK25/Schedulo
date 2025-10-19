@@ -2,7 +2,7 @@ import { useState } from "react";
 import AdminDoctors from "./AdminDoctor";
 import AdminUsers from "./AdminUser";
 import AddDoctor from "./adddoctor";
-import "./adminDashboard.css";
+import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState("doctors");

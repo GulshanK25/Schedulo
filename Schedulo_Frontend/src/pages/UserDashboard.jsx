@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import "./UserDashboard.css";
+import "./Userdashboard.css";
 import { fetchAPI } from "../api/fetchAPI";
 
 export default function UserDashboard() {

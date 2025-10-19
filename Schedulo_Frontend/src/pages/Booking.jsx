@@ -57,12 +57,14 @@ export default function BookAppointment() {
 
   // Check availability
   const checkAvailability = async () => {
+     const dateParts = date.split("-");
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     if (!time) return alert("Please select a time slot first!");
     try {
       const res = await fetchAPI(
         "/user/check-availability",
         "POST",
-        { doctorId, date, slotTime: time },
+        { doctorId, date: formattedDate, slotTime: time },
         token
       );
       setAvailability(res.success);
@@ -78,8 +80,6 @@ export default function BookAppointment() {
     e.preventDefault();
     if (!time) return alert("Please select a time slot!");
 
-
-    // Format date for backend
     const dateParts = date.split("-");
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
 
@@ -157,7 +157,7 @@ export default function BookAppointment() {
 
         {availability !== null && (
           <p className={`availability-message ${availability ? "available" : "unavailable"}`}>
-            {availability ? "Slot is available ✅" : "Slot not available ❌"}
+            {availability ? "Slot is available" : "Slot not available"}
           </p>
         )}
       </form>
