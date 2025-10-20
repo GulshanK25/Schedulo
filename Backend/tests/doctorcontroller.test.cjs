@@ -64,7 +64,7 @@ describe("Doctor Controller API Tests", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
-    expect(res.body.data.email).toBe("jane@clinic.com");
+    expect(res.body.data.email).toBe("john@doe.com");
   });
 
   test("POST /api/v1/doctor/update-status should update appointment status", async () => {

@@ -23,8 +23,8 @@ describe("User Controller API Tests", () => {
     const res = await request(app)
       .post("/api/v1/user/register")
       .send({
-        name: "Tarun",
-        email: "tarun@test.com",
+        name: "Tarun Register",
+        email: "tarun_register@test.com", // ✅ unique
         password: "123456",
       });
 
@@ -33,12 +33,12 @@ describe("User Controller API Tests", () => {
   });
 
   test("POST /api/v1/user/login should log in a user", async () => {
-    await User.create({ name: "Tarun", email: "tarun@test.com", password: "123456" });
+    await User.create({ name: "Tarun Login", email: "tarun_login@test.com", password: "123456" }); // ✅ unique
 
     const res = await request(app)
       .post("/api/v1/user/login")
       .send({
-        email: "tarun@test.com",
+        email: "tarun_login@test.com", // ✅ match created one
         password: "123456",
       });
 
@@ -49,12 +49,11 @@ describe("User Controller API Tests", () => {
 
   test("POST /api/v1/user/getUserData should return user details", async () => {
     const user = await User.create({
-      name: "Vaishnavi",
-      email: "vaish@test.com",
+      name: "sunny",
+      email: "sun_getdata@test.com", // ✅ unique
       password: "abc123",
     });
 
-    // Simulate a fake auth token (since real auth uses JWT)
     const res = await request(app)
       .post("/api/v1/user/getUserData")
       .set("Authorization", "Bearer fakeToken")
@@ -62,5 +61,6 @@ describe("User Controller API Tests", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
+    expect(res.body.data.email).toBe("sun_getdata@test.com");
   });
 });
