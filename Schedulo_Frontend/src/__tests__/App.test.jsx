@@ -1,7 +1,7 @@
-// 🧠 Must define mocks BEFORE imports
+
 const mockUser = { _id: "test-user-id", name: "Tarun Test" };
 
-// ✅ Mock localStorage globally for all components
+
 Object.defineProperty(window, "localStorage", {
   value: {
     getItem: jest.fn((key) => {
@@ -15,13 +15,13 @@ Object.defineProperty(window, "localStorage", {
   writable: true,
 });
 
-// ✅ Mock fetch globally to prevent real API calls
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve([]),
   })
 );
-// ✅ Fix for "window.alert not implemented"
+
 global.alert = jest.fn();
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
