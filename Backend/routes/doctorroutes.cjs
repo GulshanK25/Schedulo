@@ -1,4 +1,4 @@
-// File: Backend/routes/doctorroutes.cjs
+
 const express = require("express");
 const {
   getDoctorInfoController,

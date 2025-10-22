@@ -1,4 +1,4 @@
-// File: Backend/tests/usercontroller.test.cjs
+
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
@@ -50,7 +50,7 @@ describe("User Controller API Tests", () => {
   test("POST /api/v1/user/getUserData should return user details", async () => {
     const user = await User.create({
       name: "sunny",
-      email: "sun_getdata@test.com", // ✅ unique
+      email: "sun_getdata@test.com", 
       password: "abc123",
     });
 

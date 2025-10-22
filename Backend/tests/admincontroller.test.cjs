@@ -1,50 +1,49 @@
-// File: Backend/tests/admincontroller.test.cjs
+
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const app = require("../app.cjs");
 
-// Import test-friendly CommonJS models
+
 const Doctor = require("../models/doctormodel.cjs");
 const User = require("../models/usermodel.cjs");
 
 let mongoServer;
 
-// ✅ Setup in-memory MongoDB before running tests
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
   await mongoose.connect(uri);
 });
 
-// ✅ Clean up after all tests finish
+
 afterAll(async () => {
   await mongoose.disconnect();
   await mongoServer.stop();
 });
 
 describe("Admin Controller API Tests", () => {
-  // ✅ Test 1 — Get all users
+ 
   test("GET /api/v1/admin/getAllUsers should return user list", async () => {
-    // Create dummy user in DB
+   
     await User.create({
       name: "Tarun",
       email: "tarun@test.com",
       password: "12345",
     });
 
-    // Send request
+    
     const res = await request(app)
       .get("/api/v1/admin/getAllUsers")
       .set("Authorization", "Bearer dummyToken");
 
-    // Assertions
+    
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(Array.isArray(res.body.data)).toBe(true);
   });
 
-  // ✅ Test 2 — Get all doctors
+ 
   test("GET /api/v1/admin/getAllDoctors should return doctor list", async () => {
     await Doctor.create({
       userId: "123",
@@ -70,7 +69,7 @@ describe("Admin Controller API Tests", () => {
     expect(Array.isArray(res.body.data)).toBe(true);
   });
 
-  // ✅ Test 3 — Change doctor account status
+  
   test("POST /api/v1/admin/changeAccountStatus should update doctor status", async () => {
     const user = await User.create({
       name: "TestUser",

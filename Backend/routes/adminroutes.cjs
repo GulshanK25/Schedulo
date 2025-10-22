@@ -1,4 +1,4 @@
-// File: Backend/routes/adminroutes.cjs
+
 const express = require("express");
 const {
   getAllUsersController,
