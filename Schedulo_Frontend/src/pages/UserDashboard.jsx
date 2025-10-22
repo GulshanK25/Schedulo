@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./Userdashboard.css";
@@ -56,7 +56,7 @@ export default function UserDashboard() {
       const token = localStorage.getItem("token");
       const res = await fetchAPI("/user/notifications", "GET", null, token);
       if (res.success && Array.isArray(res.data)) {
-        setNotifications(res.data.reverse()); // show newest first
+        setNotifications(res.data.reverse());
       } else {
         setNotifications([]);
       }
@@ -66,10 +66,24 @@ export default function UserDashboard() {
     }
   };
 
+  // Get unique specializations from doctors (case-insensitive and trimmed)
+  const specializations = useMemo(() => {
+    const specsMap = new Map();
+    doctors.forEach(doc => {
+      if (doc.specialization && doc.specialization.trim() !== "") {
+        const normalized = doc.specialization.trim();
+        const key = normalized.toLowerCase();
+        if (!specsMap.has(key)) {
+          specsMap.set(key, normalized);
+        }
+      }
+    });
+    return Array.from(specsMap.values()).sort();
+  }, [doctors]);
+
+  // Filter doctors based on selected specialization
   const filteredDoctors = specialization
-    ? doctors.filter((doc) =>
-        doc.specialization?.toLowerCase().includes(specialization.toLowerCase())
-      )
+    ? doctors.filter((doc) => doc.specialization === specialization)
     : doctors;
 
   return (
@@ -124,12 +138,18 @@ export default function UserDashboard() {
           <section className="doctors-section">
             <div className="section-header">
               <h2>Available Doctors</h2>
-              <input
-                type="text"
-                placeholder="Filter by specialization..."
+              <select
                 value={specialization}
                 onChange={(e) => setSpecialization(e.target.value)}
-              />
+                className="specialization-dropdown"
+              >
+                <option value="">All Specializations</option>
+                {specializations.map((spec, idx) => (
+                  <option key={idx} value={spec}>
+                    {spec}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="doctor-grid">
@@ -160,7 +180,7 @@ export default function UserDashboard() {
                   </div>
                 ))
               ) : (
-                <p>No doctors available.</p>
+                <p>No doctors available{specialization && " for this specialization"}.</p>
               )}
             </div>
           </section>
@@ -177,7 +197,7 @@ export default function UserDashboard() {
                       <strong>Doctor:</strong> {apt.doctorName}
                     </p>
                     <p>
-                      <strong>Date:</strong> {apt.date} {/* show as is */}
+                      <strong>Date:</strong> {apt.date}
                     </p>
                     <p>
                       <strong>Status:</strong> {apt.status}

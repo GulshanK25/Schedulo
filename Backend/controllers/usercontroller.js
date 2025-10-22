@@ -66,29 +66,33 @@ export const getAllDoctorsController = async (req, res) => {
 export const getAllNotificationController = async (req, res) => {
   try {
     const user = await userModel.findById(req.userId); 
-    if (!user) return res.status(404).send({ success: false, message: "User not found" });
+    if (!user) {
+      return res.status(404).send({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
 
-
-    user.seennotification = user.seennotification || [];
-    user.seennotification.push(...user.notifcation);
-    user.notifcation = [];
-    await user.save();
-
+    
     res.status(200).send({
       success: true,
-      message: "All notifications marked as read",
-      data: user.seennotification,
+      message: "Notifications fetched successfully",
+      data: user.notifications, 
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ success: false, message: "Error fetching notifications", error });
+    res.status(500).send({ 
+      success: false, 
+      message: "Error fetching notifications", 
+      error: error.message 
+    });
   }
 };
 
 export const deleteAllNotificationController = async (req, res) => {
   try {
     const userId = req.user._id; 
-    const user = await User.findById(userId);
+    const user = await userModel.findById(userId);
     if (!user) return res.status(404).send({ success: false, message: "User not found" });
 
     user.notifications = [];
@@ -121,8 +125,6 @@ export const bookAppointmentController = async (req, res) => {
 
     const doctor = await doctorModel.findById(doctorId);
     if (!doctor) return res.status(404).send({ success: false, message: "Doctor not found" });
-
-    // Use startTime from request body
     const slot = doctor.slots.find(s => s.date === date && s.startTime === startTime);
 
     if (!slot || slot.status !== "available") {
