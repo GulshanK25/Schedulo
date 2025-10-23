@@ -24,6 +24,35 @@ export const registerController = async (req, res) => {
 };
 
 
+
+export const deleteaccount = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    
+    // Optional: Prevent admin from deleting themselves
+    if (userId === req.user.id) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'You cannot delete your own account' 
+      });
+    }
+
+    const user = await User.findByIdAndDelete(userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 export const loginController = async (req, res) => {
   try {
     const user = await userModel.findOne({ email: req.body.email });

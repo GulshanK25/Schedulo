@@ -13,6 +13,37 @@ export const getAllUsersController = async (req, res) => {
   }
 };
 
+export const deleteUserController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: "User not found" });
+    }
+    if (userId === req.userId) {
+      return res.status(400).send({ 
+        success: false, 
+        message: "You cannot delete your own account" 
+      });
+    }
+
+    if (user.isDoctor) {
+      await doctorModel.findOneAndDelete({ userId: userId });
+    }
+    await userModel.findByIdAndDelete(userId);
+
+    res.status(200).send({ 
+      success: true, 
+      message: "User deleted successfully" 
+    });
+  } catch (error) {
+    res.status(500).send({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
+
 
 export const getAllDoctorsController = async (req, res) => {
   try {

@@ -31,7 +31,7 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Multiple animated background layers */
+
 .login-page::before {
   content: '';
   position: absolute;
@@ -52,7 +52,6 @@ body {
   100% { transform: translate(60px, 60px) rotate(360deg); }
 }
 
-/* Floating particles */
 .login-page::after {
   content: '';
   position: absolute;
@@ -85,7 +84,6 @@ body {
   }
 }
 
-/* Login container with advanced effects */
 .login-container {
   position: relative;
   background: rgba(255, 255, 255, 0.12);
@@ -118,7 +116,7 @@ body {
   }
 }
 
-/* Animated gradient border */
+
 .login-container::before {
   content: '';
   position: absolute;
@@ -150,7 +148,7 @@ body {
   }
 }
 
-/* Secondary glow layer */
+
 .login-container::after {
   content: '';
   position: absolute;
@@ -173,7 +171,7 @@ body {
   }
 }
 
-/* Heading with advanced gradient text */
+
 .login-container h2 {
   margin-bottom: 40px;
   font-size: 42px;
@@ -198,20 +196,20 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-/* Form styling */
+
 .login-container form {
   display: flex;
   flex-direction: column;
   gap: 22px;
 }
 
-/* Input wrapper for icon */
+
 .input-wrapper {
   position: relative;
   width: 100%;
 }
 
-/* Input fields with advanced effects */
+
 .login-container input {
   width: 100%;
   padding: 18px 22px 18px 55px;
@@ -247,7 +245,7 @@ body {
   background: rgba(255, 255, 255, 0.18);
 }
 
-/* Input icons */
+
 .input-icon {
   position: absolute;
   left: 20px;
@@ -264,7 +262,6 @@ body {
   transform: translateY(-50%) scale(1.1);
 }
 
-/* Submit button with stunning effects */
 .login-container button {
   width: 100%;
   padding: 18px;
@@ -285,7 +282,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Shimmer effect on button */
 .login-container button::before {
   content: '';
   position: absolute;
@@ -308,7 +304,7 @@ body {
   100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
-/* Ripple effect container */
+
 .login-container button::after {
   content: '';
   position: absolute;
@@ -341,7 +337,7 @@ body {
   transition: all 0.1s;
 }
 
-/* Additional options with animations */
+
 .login-options {
   display: flex;
   justify-content: space-between;
@@ -420,7 +416,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Responsive design */
 @media (max-width: 480px) {
   .login-container {
     padding: 45px 35px;

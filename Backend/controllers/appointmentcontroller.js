@@ -6,16 +6,16 @@ import userModel from "../models/usermodel.js";
 import { sendEmail } from "./emailhelper.js";
 import mongoose from "mongoose";
 
-// POST /api/book-appointment
+
 export const bookAppointmentController = async (req, res) => {
   try {
     const { doctorId, userId, userInfo, date, slotTime } = req.body;
-    // date: "DD-MM-YYYY", slotTime: "HH:mm"
+    
     if (!doctorId || !userId || !date || !slotTime) {
       return res.status(400).send({ success: false, message: "Missing required fields" });
     }
 
-    // 1) Atomically set slot.booked = true if slot exists and not booked
+   
     const doctorUpdate = await doctorModel.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(doctorId),
@@ -29,7 +29,7 @@ export const bookAppointmentController = async (req, res) => {
       return res.status(200).send({ success: false, message: "Slot not available or already booked" });
     }
 
-    // 2) Create appointment (status pending)
+    
     const newAppointment = new appointmentModel({
       doctorId,
       userId,
@@ -43,7 +43,7 @@ export const bookAppointmentController = async (req, res) => {
 
     await newAppointment.save();
 
-    // 3) Set slot.appointmentId = newAppointment._id
+    
     await doctorModel.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(doctorId),
@@ -55,7 +55,7 @@ export const bookAppointmentController = async (req, res) => {
       }
     );
 
-    // 4) Notify doctor (push to doctor user notifications)
+    
     const doctorUser = await userModel.findById(doctorUpdate.userId);
     if (doctorUser) {
       doctorUser.notifications = doctorUser.notifications || [];
@@ -96,7 +96,7 @@ export const bookingAvailabilityController = async (req, res) => {
       }
       return res.status(200).send({ success: true, message: slot.booked ? "Slot booked" : "Slot available" });
     } else {
-      // return all available slots for the date
+     
       const available = doctor.slots.filter(s => s.date === date && !s.booked).map(s => ({ startTime: s.startTime, endTime: s.endTime }));
       return res.status(200).send({ success: true, data: available });
     }
